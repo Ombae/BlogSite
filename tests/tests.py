@@ -13,7 +13,7 @@ class UserModelTest(unittest.TestCase):
 
 class BlogTest(unittest.TestCase):
     def setUp(self):
-        # self.user_Seth = User(id=1,username = 'Seth',password = 'potato', email = 'seth@ms.com',bio="Time is an abstract")
+        # self.user_Seth = User(id=1,username = 'Seth',password = 'banana', email = 'seth@ms.com',bio="Time is an abstract")
         self.new_blog = Blog(id=5,title='Review for pitches',content="content",date_posted = "10-7-2018"  )
 
     def tearDown(self):
