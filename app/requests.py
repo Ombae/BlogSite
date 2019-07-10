@@ -27,6 +27,7 @@ def process_results(quote_list):
         id = quote_item.get('id')
         quote = quote_item.get('quote')
         author = quote_item.get('author')
-
         quote_object = Quote(id,quote,author)
         quote_results.append(quote_object)
+
+    return quote_results
