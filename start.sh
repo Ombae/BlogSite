@@ -1,3 +1,10 @@
+export MAIL_USERNAME=ombaejr@gmail.com
+export MAIL_PASSWORD=sethmcadams1
 export SECRET_KEY=seth6677
+
+
+export DATABASE_URL=postgresql+psycopg2://seth:SethOmbae1@localhost/blogs
+
+
 
 python3.6 manage.py server

@@ -1,73 +1,82 @@
 from . import db
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import login_manager
 from datetime import datetime
+
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-class User(db.Model, UserMixin):
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    users = db.relationship('User', backref='role', lazy="dynamic")
+
+    def __repr__(self):
+
+        return f'User {self.name}'
+
+
+class User(UserMixin, db.Model):
     __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(255))
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+    email = db.Column(db.String(255), unique=True, index=True)
+    password_hash = db.Column(db.String(255))
+    pass_secure = db.Column(db.String(255))
+    blogs = db.relationship('Blog', backref='blog', lazy="dynamic")
+    comments = db.relationship('Comment', backref='comments', lazy="dynamic")
 
-    id = db.Column(db.Integer, primary_key = True)
-    username = db.Column(db.String(20), nullable = False)
-    email = db.Column(db.String(120), nullable = False)
-    password = db.Column(db.String(255), nullable = False)
-    profile_pic_path = db.Column(db.String(255))
-    blogs = db.relationship('Blog', backref = 'author', lazy = True)
+    @property
+    def password(self):
 
-    def save_user(self):
-        db.session.add(self)
-        db.session.commit()
+        raise AttributeError('You cannot read the password attribute')
 
-    def ___repr__():
-        return f"User ('{self.username}', '{self.email}'')"
+    @password.setter
+    def password(self, password):
 
-class Blog(db.Model):
+        self.pass_secure = generate_password_hash(password)
+
+    def verify_password(self, password):
+        return check_password_hash(self.pass_secure, password)
+
+    def __repr__(self):
+
+        return f'User {self.username}'
+
+
+class Blog(UserMixin, db.Model):
+
     __tablename__ = 'blogs'
 
-    id = db.Column(db.Integer, primary_key = True)
-    title = db.Column(db.String(255))
-    content = db.Column(db.String(255))
-    date_posted = db.Column(db.DateTime, nullable = False, default = datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-    comments = db.relationship('Comments', backref = 'author' , lazy = True)
-
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255))
+    body = db.Column(db.String(255))
+    category = db.Column(db.String(255))
+    posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    comments = db.relationship('Comment', backref='blog', lazy="dynamic")
 
     def save_blog(self):
         db.session.add(self)
         db.session.commit()
 
 
-    def ___repr__():
-        return f"Blog ('{self.title}', '{self.date_posted}'')"
+class Comment(UserMixin, db.Model):
 
-
-class Comments(db.Model):
     __tablename__ = 'comments'
-
-    id = db.Column(db.Integer, primary_key = True)
-    comment = db.column(db.String(255))
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    posted = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     blog_id = db.Column(db.Integer, db.ForeignKey("blogs.id"))
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    def save_comment(self):
+    def save_comments(self):
         db.session.add(self)
         db.session.commit()
-
-
-    def ___repr__(self):
-        return f"Comments('{self.comment}')"
-
-
-
-class Quote:
-   '''
-   quote class to define quote object
-   '''
-   def __init__(self,id,quote,author):
-       self.id = id
-       self.quote = quote
-       self.author = author
