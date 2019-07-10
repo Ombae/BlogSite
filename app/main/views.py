@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from . forms import CommentForm,BlogForm
 from ..email import mail_message
 from .. import db
-import requests
+import request
 import json
 
 
@@ -26,7 +26,7 @@ def new_blog():
 		blog = Blog (body=form.body.data,category=form.category.data)
 		blog.save_blog()
 		return redirect(url_for('main.index'))
-	return render_template('blog.html',form=form)   
+	return render_template('blog.html',form=form)
 
 
 @main.route('/comments', methods = ['GET','POST'])
@@ -48,7 +48,7 @@ def profile(uname):
     if user is None:
         abort(404)
 
-    return render_template("profile/profile.html", user = user)   
+    return render_template("profile/profile.html", user = user)
 
 
 
@@ -98,5 +98,4 @@ def update_comments(uname):
 
 		return redirect(url_for('.profile',uname=user.username))
 
-	return render_template('profile/comments.html',form =form)    
-
+	return render_template('profile/comments.html',form =form)
