@@ -15,7 +15,7 @@ import json
 @main.route('/')
 def index():
     index=Blog.query.all()
-    random=requests.get('http://quotes.stormconsultancy.co.uk/random.json').json()
+    random=request.get('http://quotes.stormconsultancy.co.uk/random.json').json()
     return render_template('index.html',index=index, random=random)
 
 @main.route('/blog', methods = ['GET','POST'])
