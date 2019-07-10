@@ -1,2 +1,2 @@
 Hallo {{user.username}}
-Herzlich willkommen in der Blog-App. Wir bieten das Beste.
+Welcome to the blogs website, feel free to create awesome blogs!
