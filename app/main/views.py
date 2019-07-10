@@ -1,12 +1,11 @@
 from flask import render_template,request,redirect,url_for,abort
 from ..models import User,Blog,Comment
 from . import main
-from ..request import *
+from ..request import get_quotes
 from flask_login import login_required, current_user
 from . forms import CommentForm,BlogForm
 from ..email import mail_message
 from .. import db
-from .. import request
 import json
 
 
@@ -15,7 +14,7 @@ import json
 @main.route('/')
 def index():
     index=Blog.query.all()
-    random=request.get('http://quotes.stormconsultancy.co.uk/random.json').json()
+    random = get_quotes()
     return render_template('index.html',index=index, random=random)
 
 @main.route('/blog', methods = ['GET','POST'])
