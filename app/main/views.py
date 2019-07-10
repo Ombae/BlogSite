@@ -6,7 +6,7 @@ from flask_login import login_required, current_user
 from . forms import CommentForm,BlogForm
 from ..email import mail_message
 from .. import db
-import request
+from .. import request
 import json
 
 
